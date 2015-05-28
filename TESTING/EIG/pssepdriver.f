@@ -1,6 +1,16 @@
 *
 *
       PROGRAM PSSEPDRIVER
+
+!$omp parallel
+      CALL PSSEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSSEP
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -74,7 +84,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       REAL               SLAMCH
@@ -82,11 +92,12 @@
 *     ..
 *     .. External Subroutines ..
 *
-      EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT, 
-     $                   BLACS_GRIDINIT, BLACS_PINFO, BLACS_SETUP, 
-     $                   IGAMN2D, PSLACHKIEEE, PSLASNBT, PSSEPREQ 
+      EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT,
+     $                   BLACS_GRIDINIT, BLACS_PINFO, BLACS_SETUP,
+     $                   IGAMN2D, PSLACHKIEEE, PSLASNBT, PSSEPREQ
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

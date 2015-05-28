@@ -157,6 +157,8 @@
       COMMON             / PJLAENVTIMING / TIMING
       COMMON             / TAILOREDOPTS / PNB, ANB, INTERLEAVE,
      $                   BALANCED, TWOGEMMS
+!$omp threadprivate(/BLOCKSIZES/, /MINSIZE/, /PJLAENVTIMING/)
+!$omp threadprivate(/TAILOREDOPTS/)
 *     ..
 *     .. Executable Statements ..
 *
@@ -323,7 +325,7 @@ c                 CALL EXIT( 13 )
                   PRINT *, 'xpjlaenv.f ERROR common variable TRSBLOCK',
      $               ' may be unitialized'
 c                 CALL EXIT( 13 )
-                  STOP 
+                  STOP
                END IF
             END IF
          END IF

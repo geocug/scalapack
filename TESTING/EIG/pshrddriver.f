@@ -1,4 +1,15 @@
       PROGRAM PSHRDDRIVER
+
+!$omp parallel
+      CALL PSHRD()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSHRD
+
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -87,7 +98,7 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), NVHI( NTESTS ), NVLO( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
 *     ..
 *     .. External Subroutines ..
@@ -108,8 +119,10 @@
 *     ..
 *     .. Data statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

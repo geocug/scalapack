@@ -1,4 +1,14 @@
       PROGRAM PSTRDDRIVER
+
+!$omp parallel
+      CALL PSTR()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSTR
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -85,7 +95,7 @@
 *     .. Local Arrays ..
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ), QVAL( NTESTS )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) ::MEM
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
 *     ..
 *     .. External Subroutines ..
@@ -107,8 +117,10 @@
 *     ..
 *     .. Data statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )STOP

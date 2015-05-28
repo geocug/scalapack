@@ -16,6 +16,11 @@
 #include "../PBblacs.h"
 #include "../PBblas.h"
 
+__thread int     __dsetup=0;
+__thread PBTYP_T __dTypeStruct;
+__thread double  __dzero, __done, __dnegone;
+
+
 PBTYP_T * PB_Cdtypeset()
 {
 /*
@@ -34,90 +39,90 @@ PBTYP_T * PB_Cdtypeset()
 /*
 *  .. Local Scalars ..
 */
-   static int     setup=0;
-   static PBTYP_T TypeStruct;
-   static double  zero, one, negone;
+//   static int     setup=0;
+//   static PBTYP_T __dTypeStruct;
+//   static double  zero, one, negone;
 /* ..
 *  .. Executable Statements ..
 *
 */
-   if( setup ) return( &TypeStruct );
+   if( __dsetup ) return( &__dTypeStruct );
 
-   setup = 1;
+   __dsetup = 1;
 
-   TypeStruct.type = DREAL;
-   TypeStruct.usiz = sizeof( double );
-   TypeStruct.size = sizeof( double );
+   __dTypeStruct.type = DREAL;
+   __dTypeStruct.usiz = sizeof( double );
+   __dTypeStruct.size = sizeof( double );
 
-   zero   = ZERO;
-   one    =  ONE;
-   negone = -ONE;
+   __dzero   = ZERO;
+   __done    =  ONE;
+   __dnegone = -ONE;
 
-   TypeStruct.zero      = (char *) (&zero);
-   TypeStruct.one       = (char *) (&one);
-   TypeStruct.negone    = (char *) (&negone);
+   __dTypeStruct.zero      = (char *) (&__dzero);
+   __dTypeStruct.one       = (char *) (&__done);
+   __dTypeStruct.negone    = (char *) (&__dnegone);
 
-   TypeStruct.Cgesd2d   = Cdgesd2d;
-   TypeStruct.Cgerv2d   = Cdgerv2d;
-   TypeStruct.Cgebs2d   = Cdgebs2d;
-   TypeStruct.Cgebr2d   = Cdgebr2d;
-   TypeStruct.Cgsum2d   = Cdgsum2d;
+   __dTypeStruct.Cgesd2d   = Cdgesd2d;
+   __dTypeStruct.Cgerv2d   = Cdgerv2d;
+   __dTypeStruct.Cgebs2d   = Cdgebs2d;
+   __dTypeStruct.Cgebr2d   = Cdgebr2d;
+   __dTypeStruct.Cgsum2d   = Cdgsum2d;
 
-   TypeStruct.Fmmadd    = dmmadd_;
-   TypeStruct.Fmmcadd   = dmmcadd_;
-   TypeStruct.Fmmtadd   = dmmtadd_;
-   TypeStruct.Fmmtcadd  = dmmtcadd_;
-   TypeStruct.Fmmdda    = dmmdda_;
-   TypeStruct.Fmmddac   = dmmddac_;
-   TypeStruct.Fmmddat   = dmmddat_;
-   TypeStruct.Fmmddact  = dmmddact_;
+   __dTypeStruct.Fmmadd    = dmmadd_;
+   __dTypeStruct.Fmmcadd   = dmmcadd_;
+   __dTypeStruct.Fmmtadd   = dmmtadd_;
+   __dTypeStruct.Fmmtcadd  = dmmtcadd_;
+   __dTypeStruct.Fmmdda    = dmmdda_;
+   __dTypeStruct.Fmmddac   = dmmddac_;
+   __dTypeStruct.Fmmddat   = dmmddat_;
+   __dTypeStruct.Fmmddact  = dmmddact_;
 
-   TypeStruct.Fcshft    = dcshft_;
-   TypeStruct.Frshft    = drshft_;
+   __dTypeStruct.Fcshft    = dcshft_;
+   __dTypeStruct.Frshft    = drshft_;
 
-   TypeStruct.Fvvdotu   = dvvdot_;
-   TypeStruct.Fvvdotc   = dvvdot_;
+   __dTypeStruct.Fvvdotu   = dvvdot_;
+   __dTypeStruct.Fvvdotc   = dvvdot_;
 
-   TypeStruct.Fset      = dset_;
+   __dTypeStruct.Fset      = dset_;
 
-   TypeStruct.Ftzpad    = dtzpad_;
-   TypeStruct.Ftzpadcpy = dtzpadcpy_;
-   TypeStruct.Ftzscal   = dtzscal_;
-   TypeStruct.Fhescal   = dtzscal_;
-   TypeStruct.Ftzcnjg   = dtzscal_;
+   __dTypeStruct.Ftzpad    = dtzpad_;
+   __dTypeStruct.Ftzpadcpy = dtzpadcpy_;
+   __dTypeStruct.Ftzscal   = dtzscal_;
+   __dTypeStruct.Fhescal   = dtzscal_;
+   __dTypeStruct.Ftzcnjg   = dtzscal_;
 
-   TypeStruct.Faxpy     = daxpy_;
-   TypeStruct.Fcopy     = dcopy_;
-   TypeStruct.Fswap     = dswap_;
+   __dTypeStruct.Faxpy     = daxpy_;
+   __dTypeStruct.Fcopy     = dcopy_;
+   __dTypeStruct.Fswap     = dswap_;
 
-   TypeStruct.Fgemv     = dgemv_;
-   TypeStruct.Fsymv     = dsymv_;
-   TypeStruct.Fhemv     = dsymv_;
-   TypeStruct.Ftrmv     = dtrmv_;
-   TypeStruct.Ftrsv     = dtrsv_;
-   TypeStruct.Fagemv    = dagemv_;
-   TypeStruct.Fasymv    = dasymv_;
-   TypeStruct.Fahemv    = dasymv_;
-   TypeStruct.Fatrmv    = datrmv_;
+   __dTypeStruct.Fgemv     = dgemv_;
+   __dTypeStruct.Fsymv     = dsymv_;
+   __dTypeStruct.Fhemv     = dsymv_;
+   __dTypeStruct.Ftrmv     = dtrmv_;
+   __dTypeStruct.Ftrsv     = dtrsv_;
+   __dTypeStruct.Fagemv    = dagemv_;
+   __dTypeStruct.Fasymv    = dasymv_;
+   __dTypeStruct.Fahemv    = dasymv_;
+   __dTypeStruct.Fatrmv    = datrmv_;
 
-   TypeStruct.Fgerc     = dger_;
-   TypeStruct.Fgeru     = dger_;
-   TypeStruct.Fsyr      = dsyr_;
-   TypeStruct.Fher      = dsyr_;
-   TypeStruct.Fsyr2     = dsyr2_;
-   TypeStruct.Fher2     = dsyr2_;
+   __dTypeStruct.Fgerc     = dger_;
+   __dTypeStruct.Fgeru     = dger_;
+   __dTypeStruct.Fsyr      = dsyr_;
+   __dTypeStruct.Fher      = dsyr_;
+   __dTypeStruct.Fsyr2     = dsyr2_;
+   __dTypeStruct.Fher2     = dsyr2_;
 
-   TypeStruct.Fgemm     = dgemm_;
-   TypeStruct.Fsymm     = dsymm_;
-   TypeStruct.Fhemm     = dsymm_;
-   TypeStruct.Fsyrk     = dsyrk_;
-   TypeStruct.Fherk     = dsyrk_;
-   TypeStruct.Fsyr2k    = dsyr2k_;
-   TypeStruct.Fher2k    = dsyr2k_;
-   TypeStruct.Ftrmm     = dtrmm_;
-   TypeStruct.Ftrsm     = dtrsm_;
+   __dTypeStruct.Fgemm     = dgemm_;
+   __dTypeStruct.Fsymm     = dsymm_;
+   __dTypeStruct.Fhemm     = dsymm_;
+   __dTypeStruct.Fsyrk     = dsyrk_;
+   __dTypeStruct.Fherk     = dsyrk_;
+   __dTypeStruct.Fsyr2k    = dsyr2k_;
+   __dTypeStruct.Fher2k    = dsyr2k_;
+   __dTypeStruct.Ftrmm     = dtrmm_;
+   __dTypeStruct.Ftrsm     = dtrsm_;
 
-   return( &TypeStruct );
+   return( &__dTypeStruct );
 /*
 *  End of PB_Cdtypeset
 */

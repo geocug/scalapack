@@ -1,4 +1,14 @@
       PROGRAM PSNEPDRIVER
+
+!$omp parallel
+      CALL PSNEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSNEP
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -8,7 +18,7 @@
 *  Purpose
 *  =======
 *
-*  PSNEPDRIVER is the main test program for the REAL            
+*  PSNEPDRIVER is the main test program for the REAL
 *  SCALAPACK NEP routines.  This test driver performs a Schur
 *  decomposition followed by residual check of a Hessenberg matrix.
 *
@@ -85,7 +95,7 @@
       INTEGER            DESCA( DLEN_ ), DESCZ( DLEN_ ), IERR( 2 ),
      $                   IDUM( 1 ), NBVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-      REAL               MEM ( MEMSIZ ) 
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
 *     ..
 *     .. External Subroutines ..
@@ -106,8 +116,10 @@
 *     ..
 *     .. Data statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *
@@ -228,7 +240,7 @@
                   IPOSTPAD = MAX( NB, NQ )
                   IPREPAD = IPREPAD + 1000
                   IMIDPAD = IMIDPAD + 1000
-                  IPOSTPAD = IPOSTPAD + 1000                  
+                  IPOSTPAD = IPOSTPAD + 1000
                ELSE
                   IPREPAD = 0
                   IMIDPAD = 0

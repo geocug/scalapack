@@ -1,5 +1,9 @@
 #include "tools.h"
 
+__thread char * pblasbuf = NULL;
+__thread int  pbbuflen = 0, mone = -1;
+
+
 char * getpbbuf( mess, length )
 /*
 *  .. Scalar Arguments ..
@@ -21,8 +25,8 @@ char * getpbbuf( mess, length )
 *
 *  .. Local Scalars ..
 */
-   static char * pblasbuf = NULL;
-   static int  pbbuflen = 0, mone = -1;
+//   static char * pblasbuf = NULL;
+//   static int  pbbuflen = 0, mone = -1;
 /* ..
 *  .. External Functions ..
 */

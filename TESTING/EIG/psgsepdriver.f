@@ -1,6 +1,16 @@
 *
 *
       PROGRAM PSGSEPDRIVER
+
+!$omp parallel
+      CALL PSGSEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSGSEP
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -70,7 +80,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       REAL               SLAMCH
@@ -83,6 +93,7 @@
      $                   IGAMN2D, PSGSEPREQ, PSLACHKIEEE, PSLASNBT
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

@@ -1,4 +1,14 @@
       PROGRAM PSLLTDRIVER
+
+!$omp parallel
+      CALL PSLLT()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSLLT
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -97,7 +107,7 @@
      $                   NBRVAL( NTESTS ), NBVAL( NTESTS ),
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
 *     ..
 *     .. External Subroutines ..
@@ -120,8 +130,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

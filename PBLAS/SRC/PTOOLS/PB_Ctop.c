@@ -16,6 +16,14 @@
 #include "../PBblacs.h"
 #include "../PBblas.h"
 
+__thread char    rbtop = CTOP_DEFAULT;
+__thread char    cbtop = CTOP_DEFAULT;
+__thread char    abtop = CTOP_DEFAULT;
+__thread char    rctop = CTOP_DEFAULT;
+__thread char    cctop = CTOP_DEFAULT;
+__thread char    actop = CTOP_DEFAULT;
+
+
 #ifdef __STDC__
 char * PB_Ctop( int * ICTXT, char * OP, char * SCOPE, char * TOP )
 #else
@@ -73,12 +81,12 @@ char * PB_Ctop( ICTXT, OP, SCOPE, TOP )
 /*
 *  .. Local Scalars ..
 */
-   static char    rbtop = CTOP_DEFAULT;
-   static char    cbtop = CTOP_DEFAULT;
-   static char    abtop = CTOP_DEFAULT;
-   static char    rctop = CTOP_DEFAULT;
-   static char    cctop = CTOP_DEFAULT;
-   static char    actop = CTOP_DEFAULT;
+//   static char    rbtop = CTOP_DEFAULT;
+//   static char    cbtop = CTOP_DEFAULT;
+//   static char    abtop = CTOP_DEFAULT;
+//   static char    rctop = CTOP_DEFAULT;
+//   static char    cctop = CTOP_DEFAULT;
+//   static char    actop = CTOP_DEFAULT;
 /* ..
 *  .. Executable Statements ..
 *

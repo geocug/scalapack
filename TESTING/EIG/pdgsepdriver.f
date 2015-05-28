@@ -1,6 +1,16 @@
 *
 *
       PROGRAM PDGSEPDRIVER
+
+!$omp parallel
+      CALL PDGSEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDGSEP
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -70,7 +80,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      DOUBLE PRECISION   MEM( MEMSIZ )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       DOUBLE PRECISION   DLAMCH
@@ -83,6 +93,7 @@
      $                   IGAMN2D, PDGSEPREQ, PDLACHKIEEE, PDLASNBT
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

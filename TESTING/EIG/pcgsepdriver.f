@@ -1,6 +1,16 @@
 *
 *
       PROGRAM PCGSEPDRIVER
+
+!$omp parallel
+      CALL PCGSEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PCGSEP
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -64,7 +74,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      COMPLEX            MEM( MEMSIZ )
+      COMPLEX, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       REAL               SLAMCH
@@ -77,6 +87,7 @@
      $                   IGAMN2D, PCGSEPREQ, PSLACHKIEEE, PSLASNBT
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

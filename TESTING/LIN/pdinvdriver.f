@@ -1,4 +1,14 @@
       PROGRAM PDINVDRIVER
+
+!$omp parallel
+      CALL PDINV()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDINV
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -90,7 +100,8 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ),
      $                   QVAL( NTESTS )
-      DOUBLE PRECISION   MEM( MEMSIZ ), CTIME( 2 ), WTIME( 2 )
+      DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -113,8 +124,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP /4*0/
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

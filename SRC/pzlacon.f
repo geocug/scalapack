@@ -180,7 +180,15 @@
       INTRINSIC          ABS, DBLE, DCMPLX
 *     ..
 *     .. Save statement ..
-      SAVE
+      COMMON /CC00/ I, ICTXT, IIVX, IMAXROW, IOFFVX, IROFF, ITER
+      COMMON /CC01/ IVXCOL, IVXROW, J, JLAST, JJVX, JUMP, K
+      COMMON /CC02/ ALTSGN, ESTOLD, SAFMIN, TEMP
+      COMMON /CC03/ JLMAX, XMAX
+      COMMON /CC04/ WORK
+!$omp threadprivate(/CC00/, /CC01/, /CC02/, /CC03/, /CC04/)
+
+
+
 *     ..
 *     .. Executable Statements ..
 *

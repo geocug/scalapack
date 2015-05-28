@@ -2,6 +2,16 @@
 *
       PROGRAM PCSEPDRIVER
 *
+!$omp parallel
+      CALL PCSEP()
+!$omp end parallel
+*
+      STOP
+      END
+*
+*
+      SUBROUTINE PCSEP
+*
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
@@ -64,7 +74,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      COMPLEX            MEM( MEMSIZ )
+      COMPLEX, ALLOCATABLE :: MEM(:)
 *     ..
 *     .. External Functions ..
       REAL               SLAMCH
@@ -77,6 +87,7 @@
      $                   IGAMN2D, PCSEPREQ, PSLACHKIEEE, PSLASNBT
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

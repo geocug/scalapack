@@ -1,4 +1,14 @@
       PROGRAM PCGBDRIVER
+
+!$omp parallel
+      CALL PCGB()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PCGB
 *
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -122,8 +132,8 @@
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-      COMPLEX            MEM( MEMSIZ )
-*     ..
+      COMPLEX, ALLOCATABLE, DIMENSION(:) :: MEM
+*     i..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
      $                   BLACS_GRIDEXIT, BLACS_GRIDINFO, BLACS_GRIDINIT,
@@ -143,11 +153,13 @@
 *     ..
 *     .. Data Statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *
 *
 *
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

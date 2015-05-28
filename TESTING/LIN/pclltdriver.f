@@ -1,4 +1,14 @@
       PROGRAM PCLLTDRIVER
+
+!$omp parallel
+      CALL PCLLT()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PCLLT
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -101,7 +111,7 @@
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-      COMPLEX            MEM( MEMSIZ )
+      COMPLEX, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GRIDEXIT,
@@ -123,8 +133,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

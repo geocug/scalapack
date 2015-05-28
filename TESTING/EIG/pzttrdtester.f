@@ -134,6 +134,8 @@
       COMMON             / TAILOREDOPTS / PNB, ANB, INTERLEAVE,
      $                   BALANCED, TWOGEMMS
       COMMON             / TIMECONTROL / TIMEINTERNALS
+!$omp threadprivate(/BLOCKSIZES/, /MINSIZE/, /PJLAENVTIMING/)
+!$omp threadprivate(/TAILOREDOPTS/, /TIMECONTROL/)
 *     ..
 *     .. Data statements ..
       DATA               BALTIME / 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0 /

@@ -1,4 +1,14 @@
       PROGRAM PZTRDDRIVER
+
+!$omp parallel
+      CALL PZTRD()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PZTRD
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -87,7 +97,7 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
-      COMPLEX*16         MEM( MEMSIZ )
+      COMPLEX*16, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -108,8 +118,10 @@
 *     ..
 *     .. Data statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
       IF( BLOCK_CYCLIC_2D*CSRC_*CTXT_*DLEN_*DTYPE_*LLD_*MB_*M_*NB_*N_*
      $    RSRC_.LT.0 )STOP

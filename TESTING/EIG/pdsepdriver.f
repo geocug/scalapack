@@ -1,6 +1,16 @@
 *
 *
       PROGRAM PDSEPDRIVER
+
+!$omp parallel
+      CALL PDSEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDSEP
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -30,10 +40,10 @@
 *     ============
 *
 *     This routine tests PDSYEVX, the expert driver for the parallel
-*     symmetric eigenvalue problem, PDSYEV and PDSYEVD.  We would like 
-*     to cover all possible combinations of:  matrix size, process 
-*     configuration (nprow and npcol), block size (nb), 
-*     matrix type (??), range of eigenvalue (all, by value, 
+*     symmetric eigenvalue problem, PDSYEV and PDSYEVD.  We would like
+*     to cover all possible combinations of:  matrix size, process
+*     configuration (nprow and npcol), block size (nb),
+*     matrix type (??), range of eigenvalue (all, by value,
 *     by position), sorting options, and upper vs. lower storage.
 *
 *     As PDSYEV returns an error message when heterogeneity is detected,
@@ -74,7 +84,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      DOUBLE PRECISION   MEM( MEMSIZ )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       DOUBLE PRECISION   DLAMCH
@@ -82,11 +92,12 @@
 *     ..
 *     .. External Subroutines ..
 *
-      EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT, 
-     $                   BLACS_GRIDINIT, BLACS_PINFO, BLACS_SETUP, 
-     $                   IGAMN2D, PDLACHKIEEE, PDLASNBT, PDSEPREQ 
+      EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT,
+     $                   BLACS_GRIDINIT, BLACS_PINFO, BLACS_SETUP,
+     $                   IGAMN2D, PDLACHKIEEE, PDLASNBT, PDSEPREQ
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

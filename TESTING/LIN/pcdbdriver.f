@@ -1,4 +1,14 @@
       PROGRAM PCDBDRIVER
+
+!$omp parallel
+      CALL PCDB()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PCDB
 *
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -113,7 +123,7 @@
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-      COMPLEX            MEM( MEMSIZ )
+      COMPLEX, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -134,11 +144,13 @@
 *     ..
 *     .. Data Statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *
 *
 *
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *
@@ -917,10 +929,5 @@
  9987 FORMAT( 'END OF TESTS.' )
  9986 FORMAT( '||A - ', A4, '|| / (||A|| * N * eps) = ', G25.7 )
  9985 FORMAT( '||Ax-b||/(||x||*||A||*eps*N) ', F25.7 )
-*
-      STOP
-*
-*     End of PCDBTRS_DRIVER
-*
       END
-*
+

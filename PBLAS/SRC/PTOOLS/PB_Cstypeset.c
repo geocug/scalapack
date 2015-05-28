@@ -16,6 +16,11 @@
 #include "../PBblacs.h"
 #include "../PBblas.h"
 
+__thread int     __ssetup=0;
+__thread PBTYP_T __sTypeStruct;
+__thread float   __szero, __sone, __snegone;
+
+
 PBTYP_T * PB_Cstypeset()
 {
 /*
@@ -34,90 +39,90 @@ PBTYP_T * PB_Cstypeset()
 /*
 *  .. Local Scalars ..
 */
-   static int     setup=0;
-   static PBTYP_T TypeStruct;
-   static float   zero, one, negone;
+//   static int     setup=0;
+//   static PBTYP_T __sTypeStruct;
+//   static float   zero, one, negone;
 /* ..
 *  .. Executable Statements ..
 *
 */
-   if( setup ) return( &TypeStruct );
+   if( __ssetup ) return( &__sTypeStruct );
 
-   setup = 1;
+   __ssetup = 1;
 
-   TypeStruct.type = SREAL;
-   TypeStruct.usiz = sizeof( float );
-   TypeStruct.size = sizeof( float );
+   __sTypeStruct.type = SREAL;
+   __sTypeStruct.usiz = sizeof( float );
+   __sTypeStruct.size = sizeof( float );
 
-   zero   = ZERO;
-   one    =  ONE;
-   negone = -ONE;
+   __szero   = ZERO;
+   __sone    =  ONE;
+   __snegone = -ONE;
 
-   TypeStruct.zero      = (char *) (&zero);
-   TypeStruct.one       = (char *) (&one);
-   TypeStruct.negone    = (char *) (&negone);
+   __sTypeStruct.zero      = (char *) (&__szero);
+   __sTypeStruct.one       = (char *) (&__sone);
+   __sTypeStruct.negone    = (char *) (&__snegone);
 
-   TypeStruct.Cgesd2d   = Csgesd2d;
-   TypeStruct.Cgerv2d   = Csgerv2d;
-   TypeStruct.Cgebs2d   = Csgebs2d;
-   TypeStruct.Cgebr2d   = Csgebr2d;
-   TypeStruct.Cgsum2d   = Csgsum2d;
+   __sTypeStruct.Cgesd2d   = Csgesd2d;
+   __sTypeStruct.Cgerv2d   = Csgerv2d;
+   __sTypeStruct.Cgebs2d   = Csgebs2d;
+   __sTypeStruct.Cgebr2d   = Csgebr2d;
+   __sTypeStruct.Cgsum2d   = Csgsum2d;
 
-   TypeStruct.Fmmadd    = smmadd_;
-   TypeStruct.Fmmcadd   = smmcadd_;
-   TypeStruct.Fmmtadd   = smmtadd_;
-   TypeStruct.Fmmtcadd  = smmtcadd_;
-   TypeStruct.Fmmdda    = smmdda_;
-   TypeStruct.Fmmddac   = smmddac_;
-   TypeStruct.Fmmddat   = smmddat_;
-   TypeStruct.Fmmddact  = smmddact_;
+   __sTypeStruct.Fmmadd    = smmadd_;
+   __sTypeStruct.Fmmcadd   = smmcadd_;
+   __sTypeStruct.Fmmtadd   = smmtadd_;
+   __sTypeStruct.Fmmtcadd  = smmtcadd_;
+   __sTypeStruct.Fmmdda    = smmdda_;
+   __sTypeStruct.Fmmddac   = smmddac_;
+   __sTypeStruct.Fmmddat   = smmddat_;
+   __sTypeStruct.Fmmddact  = smmddact_;
 
-   TypeStruct.Fcshft    = scshft_;
-   TypeStruct.Frshft    = srshft_;
+   __sTypeStruct.Fcshft    = scshft_;
+   __sTypeStruct.Frshft    = srshft_;
 
-   TypeStruct.Fvvdotu   = svvdot_;
-   TypeStruct.Fvvdotc   = svvdot_;
+   __sTypeStruct.Fvvdotu   = svvdot_;
+   __sTypeStruct.Fvvdotc   = svvdot_;
 
-   TypeStruct.Fset      = sset_;
+   __sTypeStruct.Fset      = sset_;
 
-   TypeStruct.Ftzpad    = stzpad_;
-   TypeStruct.Ftzpadcpy = stzpadcpy_;
-   TypeStruct.Ftzscal   = stzscal_;
-   TypeStruct.Fhescal   = stzscal_;
-   TypeStruct.Ftzcnjg   = stzscal_;
+   __sTypeStruct.Ftzpad    = stzpad_;
+   __sTypeStruct.Ftzpadcpy = stzpadcpy_;
+   __sTypeStruct.Ftzscal   = stzscal_;
+   __sTypeStruct.Fhescal   = stzscal_;
+   __sTypeStruct.Ftzcnjg   = stzscal_;
 
-   TypeStruct.Faxpy     = saxpy_;
-   TypeStruct.Fcopy     = scopy_;
-   TypeStruct.Fswap     = sswap_;
+   __sTypeStruct.Faxpy     = saxpy_;
+   __sTypeStruct.Fcopy     = scopy_;
+   __sTypeStruct.Fswap     = sswap_;
 
-   TypeStruct.Fgemv     = sgemv_;
-   TypeStruct.Fsymv     = ssymv_;
-   TypeStruct.Fhemv     = ssymv_;
-   TypeStruct.Ftrmv     = strmv_;
-   TypeStruct.Ftrsv     = strsv_;
-   TypeStruct.Fagemv    = sagemv_;
-   TypeStruct.Fasymv    = sasymv_;
-   TypeStruct.Fahemv    = sasymv_;
-   TypeStruct.Fatrmv    = satrmv_;
+   __sTypeStruct.Fgemv     = sgemv_;
+   __sTypeStruct.Fsymv     = ssymv_;
+   __sTypeStruct.Fhemv     = ssymv_;
+   __sTypeStruct.Ftrmv     = strmv_;
+   __sTypeStruct.Ftrsv     = strsv_;
+   __sTypeStruct.Fagemv    = sagemv_;
+   __sTypeStruct.Fasymv    = sasymv_;
+   __sTypeStruct.Fahemv    = sasymv_;
+   __sTypeStruct.Fatrmv    = satrmv_;
 
-   TypeStruct.Fgerc     = sger_;
-   TypeStruct.Fgeru     = sger_;
-   TypeStruct.Fsyr      = ssyr_;
-   TypeStruct.Fher      = ssyr_;
-   TypeStruct.Fsyr2     = ssyr2_;
-   TypeStruct.Fher2     = ssyr2_;
+   __sTypeStruct.Fgerc     = sger_;
+   __sTypeStruct.Fgeru     = sger_;
+   __sTypeStruct.Fsyr      = ssyr_;
+   __sTypeStruct.Fher      = ssyr_;
+   __sTypeStruct.Fsyr2     = ssyr2_;
+   __sTypeStruct.Fher2     = ssyr2_;
 
-   TypeStruct.Fgemm     = sgemm_;
-   TypeStruct.Fsymm     = ssymm_;
-   TypeStruct.Fhemm     = ssymm_;
-   TypeStruct.Fsyrk     = ssyrk_;
-   TypeStruct.Fherk     = ssyrk_;
-   TypeStruct.Fsyr2k    = ssyr2k_;
-   TypeStruct.Fher2k    = ssyr2k_;
-   TypeStruct.Ftrmm     = strmm_;
-   TypeStruct.Ftrsm     = strsm_;
+   __sTypeStruct.Fgemm     = sgemm_;
+   __sTypeStruct.Fsymm     = ssymm_;
+   __sTypeStruct.Fhemm     = ssymm_;
+   __sTypeStruct.Fsyrk     = ssyrk_;
+   __sTypeStruct.Fherk     = ssyrk_;
+   __sTypeStruct.Fsyr2k    = ssyr2k_;
+   __sTypeStruct.Fher2k    = ssyr2k_;
+   __sTypeStruct.Ftrmm     = strmm_;
+   __sTypeStruct.Ftrsm     = strsm_;
 
-   return( &TypeStruct );
+   return( &__sTypeStruct );
 /*
 *  End of PB_Cstypeset
 */

@@ -16,6 +16,11 @@
 #include "../PBblacs.h"
 #include "../PBblas.h"
 
+__thread int     __isetup=0;
+__thread PBTYP_T __iTypeStruct;
+__thread int     __izero, __ione, __inegone;
+
+
 PBTYP_T * PB_Citypeset()
 {
 /*
@@ -34,90 +39,90 @@ PBTYP_T * PB_Citypeset()
 /*
 *  .. Local Scalars ..
 */
-   static int     setup=0;
-   static PBTYP_T TypeStruct;
-   static int     zero, one, negone;
+//   static int     setup=0;
+//   static PBTYP_T __iTypeStruct;
+//   static int     zero, one, negone;
 /* ..
 *  .. Executable Statements ..
 *
 */
-   if( setup ) return( &TypeStruct );
+   if( __isetup ) return( &__iTypeStruct );
 
-   setup = 1;
+   __isetup = 1;
 
-   TypeStruct.type = INT;
-   TypeStruct.usiz = sizeof( int );
-   TypeStruct.size = sizeof( int );
-   zero   =  0;
-   one    =  1;
-   negone = -1;
+   __iTypeStruct.type = INT;
+   __iTypeStruct.usiz = sizeof( int );
+   __iTypeStruct.size = sizeof( int );
+   __izero   =  0;
+   __ione    =  1;
+   __inegone = -1;
 
-   TypeStruct.zero      = (char *) (&zero);
-   TypeStruct.one       = (char *) (&one);
-   TypeStruct.negone    = (char *) (&negone);
+   __iTypeStruct.zero      = (char *) (&__izero);
+   __iTypeStruct.one       = (char *) (&__ione);
+   __iTypeStruct.negone    = (char *) (&__inegone);
 
-   TypeStruct.Cgesd2d   = Cigesd2d;
-   TypeStruct.Cgerv2d   = Cigerv2d;
-   TypeStruct.Cgebs2d   = Cigebs2d;
-   TypeStruct.Cgebr2d   = Cigebr2d;
-   TypeStruct.Cgsum2d   = Cigsum2d;
+   __iTypeStruct.Cgesd2d   = Cigesd2d;
+   __iTypeStruct.Cgerv2d   = Cigerv2d;
+   __iTypeStruct.Cgebs2d   = Cigebs2d;
+   __iTypeStruct.Cgebr2d   = Cigebr2d;
+   __iTypeStruct.Cgsum2d   = Cigsum2d;
 
-   TypeStruct.Fmmadd    = immadd_;
-   TypeStruct.Fmmcadd   = immadd_;
-   TypeStruct.Fmmtadd   = immtadd_;
-   TypeStruct.Fmmtcadd  = immtadd_;
-   TypeStruct.Fmmdda    = immdda_;
-   TypeStruct.Fmmddac   = immdda_;
-   TypeStruct.Fmmddat   = immddat_;
-   TypeStruct.Fmmddact  = immddat_;
+   __iTypeStruct.Fmmadd    = immadd_;
+   __iTypeStruct.Fmmcadd   = immadd_;
+   __iTypeStruct.Fmmtadd   = immtadd_;
+   __iTypeStruct.Fmmtcadd  = immtadd_;
+   __iTypeStruct.Fmmdda    = immdda_;
+   __iTypeStruct.Fmmddac   = immdda_;
+   __iTypeStruct.Fmmddat   = immddat_;
+   __iTypeStruct.Fmmddact  = immddat_;
 
-   TypeStruct.Fcshft    = NULL;
-   TypeStruct.Frshft    = NULL;
+   __iTypeStruct.Fcshft    = NULL;
+   __iTypeStruct.Frshft    = NULL;
 
-   TypeStruct.Fvvdotu   = NULL;
-   TypeStruct.Fvvdotc   = NULL;
+   __iTypeStruct.Fvvdotu   = NULL;
+   __iTypeStruct.Fvvdotc   = NULL;
 
-   TypeStruct.Fset      = NULL;
+   __iTypeStruct.Fset      = NULL;
 
-   TypeStruct.Ftzpad    = NULL;
-   TypeStruct.Ftzpadcpy = NULL;
+   __iTypeStruct.Ftzpad    = NULL;
+   __iTypeStruct.Ftzpadcpy = NULL;
 
-   TypeStruct.Ftzscal   = NULL;
-   TypeStruct.Fhescal   = NULL;
-   TypeStruct.Ftzcnjg   = NULL;
+   __iTypeStruct.Ftzscal   = NULL;
+   __iTypeStruct.Fhescal   = NULL;
+   __iTypeStruct.Ftzcnjg   = NULL;
 
-   TypeStruct.Faxpy     = NULL;
-   TypeStruct.Fcopy     = NULL;
-   TypeStruct.Fswap     = NULL;
+   __iTypeStruct.Faxpy     = NULL;
+   __iTypeStruct.Fcopy     = NULL;
+   __iTypeStruct.Fswap     = NULL;
 
-   TypeStruct.Fgemv     = NULL;
-   TypeStruct.Fsymv     = NULL;
-   TypeStruct.Fhemv     = NULL;
-   TypeStruct.Ftrmv     = NULL;
-   TypeStruct.Ftrsv     = NULL;
-   TypeStruct.Fagemv    = NULL;
-   TypeStruct.Fasymv    = NULL;
-   TypeStruct.Fahemv    = NULL;
-   TypeStruct.Fatrmv    = NULL;
+   __iTypeStruct.Fgemv     = NULL;
+   __iTypeStruct.Fsymv     = NULL;
+   __iTypeStruct.Fhemv     = NULL;
+   __iTypeStruct.Ftrmv     = NULL;
+   __iTypeStruct.Ftrsv     = NULL;
+   __iTypeStruct.Fagemv    = NULL;
+   __iTypeStruct.Fasymv    = NULL;
+   __iTypeStruct.Fahemv    = NULL;
+   __iTypeStruct.Fatrmv    = NULL;
 
-   TypeStruct.Fgerc     = NULL;
-   TypeStruct.Fgeru     = NULL;
-   TypeStruct.Fsyr      = NULL;
-   TypeStruct.Fher      = NULL;
-   TypeStruct.Fsyr2     = NULL;
-   TypeStruct.Fher2     = NULL;
+   __iTypeStruct.Fgerc     = NULL;
+   __iTypeStruct.Fgeru     = NULL;
+   __iTypeStruct.Fsyr      = NULL;
+   __iTypeStruct.Fher      = NULL;
+   __iTypeStruct.Fsyr2     = NULL;
+   __iTypeStruct.Fher2     = NULL;
 
-   TypeStruct.Fgemm     = NULL;
-   TypeStruct.Fsymm     = NULL;
-   TypeStruct.Fhemm     = NULL;
-   TypeStruct.Fsyrk     = NULL;
-   TypeStruct.Fherk     = NULL;
-   TypeStruct.Fsyr2k    = NULL;
-   TypeStruct.Fher2k    = NULL;
-   TypeStruct.Ftrmm     = NULL;
-   TypeStruct.Ftrsm     = NULL;
+   __iTypeStruct.Fgemm     = NULL;
+   __iTypeStruct.Fsymm     = NULL;
+   __iTypeStruct.Fhemm     = NULL;
+   __iTypeStruct.Fsyrk     = NULL;
+   __iTypeStruct.Fherk     = NULL;
+   __iTypeStruct.Fsyr2k    = NULL;
+   __iTypeStruct.Fher2k    = NULL;
+   __iTypeStruct.Ftrmm     = NULL;
+   __iTypeStruct.Ftrsm     = NULL;
 
-   return( &TypeStruct );
+   return( &__iTypeStruct );
 /*
 *  End of PB_Citypeset
 */

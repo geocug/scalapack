@@ -26,6 +26,8 @@
       DOUBLE PRECISION   CPUSEC( NTIMER ), CPUSTART( NTIMER ),
      $                   WALLSEC( NTIMER ), WALLSTART( NTIMER )
       COMMON /SLTIMER00/ CPUSEC, WALLSEC, CPUSTART, WALLSTART, DISABLED
+!$omp threadprivate(/SLTIMER00/)
+
 *     ..
 *     .. Executable Statements ..
 *
@@ -80,14 +82,19 @@
       PARAMETER          ( STARTFLAG = -5.0D+0 )
 *     ..
 *     .. External Functions ..
-      DOUBLE PRECISION   DCPUTIME00, DWALLTIME00
-      EXTERNAL           DCPUTIME00, DWALLTIME00
+      DOUBLE PRECISION   DCPUTIME00, DWALLTIME00, SYSSECONDS
+      EXTERNAL           DCPUTIME00, DWALLTIME00, SYSSECONDS
 *     ..
 *     .. Common Blocks ..
       LOGICAL            DISABLED
       DOUBLE PRECISION   CPUSEC( NTIMER ), CPUSTART( NTIMER ),
      $                   WALLSEC( NTIMER ), WALLSTART( NTIMER )
+
+      DOUBLE PRECISION   wt, wt0, wt1
+
       COMMON /SLTIMER00/ CPUSEC, WALLSEC, CPUSTART, WALLSTART, DISABLED
+!$omp threadprivate(/SLTIMER00/)
+
 *     ..
 *     .. Executable Statements ..
 *
@@ -100,7 +107,8 @@
 *
 *        If timer has not been started, start it
 *
-         WALLSTART( I ) = DWALLTIME00()
+         wt = DWALLTIME00()
+         WALLSTART( I ) = wt
          CPUSTART( I )  = DCPUTIME00()
 *
       ELSE
@@ -108,7 +116,15 @@
 *        Stop timer and add interval to count
 *
          CPUSEC( I ) = CPUSEC( I ) + DCPUTIME00() - CPUSTART( I )
-         WALLSEC( I ) = WALLSEC( I ) + DWALLTIME00() - WALLSTART( I )
+
+         wt0 = WALLSEC( 1 )
+         wt1 = WALLSTART( 1 )
+
+         wt = DWALLTIME00()
+         WALLSEC( I ) = WALLSEC( I ) + wt - WALLSTART( I )
+
+         wt1 = WALLSEC( 1 )
+
          WALLSTART( I ) = STARTFLAG
 *
       END IF
@@ -142,6 +158,8 @@
       DOUBLE PRECISION   CPUSEC( NTIMER ), CPUSTART( NTIMER ),
      $                   WALLSEC( NTIMER ), WALLSTART( NTIMER )
       COMMON /SLTIMER00/ CPUSEC, WALLSEC, CPUSTART, WALLSTART, DISABLED
+!$omp threadprivate(/SLTIMER00/)
+
 *     ..
 *     .. Executable Statements ..
 *
@@ -174,6 +192,8 @@
       DOUBLE PRECISION   CPUSEC( NTIMER ), CPUSTART( NTIMER ),
      $                   WALLSEC( NTIMER ), WALLSTART( NTIMER )
       COMMON /SLTIMER00/ CPUSEC, WALLSEC, CPUSTART, WALLSTART, DISABLED
+!$omp threadprivate(/SLTIMER00/)
+
 *     ..
 *     .. Executable Statements ..
 *
@@ -233,7 +253,10 @@
       LOGICAL            DISABLED
       DOUBLE PRECISION   CPUSEC( NTIMER ), CPUSTART( NTIMER ),
      $                   WALLSEC( NTIMER ), WALLSTART( NTIMER )
+      DOUBLE PRECISION   wt, ct
       COMMON /SLTIMER00/ CPUSEC, WALLSEC, CPUSTART, WALLSTART, DISABLED
+!$omp threadprivate(/SLTIMER00/)
+
 *     ..
 *     .. Executable Statements ..
 *
@@ -241,13 +264,16 @@
 *
 *        If walltime not available on this machine, return -1 flag
 *
-         IF( DWALLTIME00().EQ.ERRFLAG ) THEN
+         wt = DWALLTIME00()
+
+         IF( wt.EQ.ERRFLAG ) THEN
             TIME = ERRFLAG
          ELSE
             TIME = WALLSEC( I )
          END IF
       ELSE
-         IF( DCPUTIME00().EQ.ERRFLAG ) THEN
+         ct = DCPUTIME00()
+         IF( ct.EQ.ERRFLAG ) THEN
             TIME = ERRFLAG
          ELSE
             TIME = CPUSEC( I )
@@ -338,7 +364,10 @@
       LOGICAL            DISABLED
       DOUBLE PRECISION   CPUSEC( NTIMER ), CPUSTART( NTIMER ),
      $                   WALLSEC( NTIMER ), WALLSTART( NTIMER )
+      DOUBLE PRECISION   wt, ct
       COMMON /SLTIMER00/ CPUSEC, WALLSEC, CPUSTART, WALLSTART, DISABLED
+!$omp threadprivate(/SLTIMER00/)
+
 *     ..
 *     .. Executable Statements ..
 *
@@ -354,7 +383,8 @@
 *        If walltime not available on this machine, fill in times
 *        with -1 flag, and return
 *
-         IF( DWALLTIME00().EQ.ERRFLAG ) THEN
+         wt = DWALLTIME00()
+         IF( wt.EQ.ERRFLAG ) THEN
             DO 10 I = 1, N
                TIMES( I ) = ERRFLAG
    10       CONTINUE
@@ -365,7 +395,8 @@
    20       CONTINUE
          END IF
       ELSE
-         IF( DCPUTIME00().EQ.ERRFLAG ) THEN
+         ct = DCPUTIME00()
+         IF( ct.EQ.ERRFLAG ) THEN
             DO 30 I = 1, N
                TIMES( I ) = ERRFLAG
    30       CONTINUE

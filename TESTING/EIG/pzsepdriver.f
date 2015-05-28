@@ -1,7 +1,16 @@
 *
 *
       PROGRAM PZSEPDRIVER
-*
+
+!$omp parallel
+      CALL PZSEP()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PZSEP
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
@@ -70,7 +79,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      COMPLEX*16         MEM( MEMSIZ )
+      COMPLEX*16, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       DOUBLE PRECISION   DLAMCH
@@ -83,6 +92,7 @@
      $                   IGAMN2D, PDLACHKIEEE, PDLASNBT, PZSEPREQ
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

@@ -16,6 +16,12 @@
 #include "../PBblacs.h"
 #include "../PBblas.h"
 
+
+__thread int     __zsetup=0;
+__thread PBTYP_T __zTypeStruct;
+__thread cmplx16 __zzero, __zone, __znegone;
+
+
 PBTYP_T * PB_Cztypeset()
 {
 /*
@@ -34,93 +40,93 @@ PBTYP_T * PB_Cztypeset()
 /*
 *  .. Local Scalars ..
 */
-   static int     setup=0;
-   static PBTYP_T TypeStruct;
-   static cmplx16 zero, one, negone;
+//   static int     setup=0;
+//   static PBTYP_T __zTypeStruct;
+//   static cmplx16 zero, one, negone;
 /* ..
 *  .. Executable Statements ..
 *
 */
-   if( setup ) return( &TypeStruct );
+   if( __zsetup ) return( &__zTypeStruct );
 
-   setup = 1;
+   __zsetup = 1;
 
-   TypeStruct.type = DCPLX;
-   TypeStruct.usiz = sizeof( double  );
-   TypeStruct.size = sizeof( cmplx16 );
+   __zTypeStruct.type = DCPLX;
+   __zTypeStruct.usiz = sizeof( double  );
+   __zTypeStruct.size = sizeof( cmplx16 );
 
-   zero  [REAL_PART] = ZERO;
-   zero  [IMAG_PART] = ZERO;
-   one   [REAL_PART] =  ONE;
-   one   [IMAG_PART] = ZERO;
-   negone[REAL_PART] = -ONE;
-   negone[IMAG_PART] = ZERO;
+   __zzero  [REAL_PART] = ZERO;
+   __zzero  [IMAG_PART] = ZERO;
+   __zone   [REAL_PART] =  ONE;
+   __zone   [IMAG_PART] = ZERO;
+   __znegone[REAL_PART] = -ONE;
+   __znegone[IMAG_PART] = ZERO;
 
-   TypeStruct.zero      = ((char *) zero);
-   TypeStruct.one       = ((char *) one);
-   TypeStruct.negone    = ((char *) negone);
+   __zTypeStruct.zero      = ((char *) __zzero);
+   __zTypeStruct.one       = ((char *) __zone);
+   __zTypeStruct.negone    = ((char *) __znegone);
 
-   TypeStruct.Cgesd2d   = Czgesd2d;
-   TypeStruct.Cgerv2d   = Czgerv2d;
-   TypeStruct.Cgebs2d   = Czgebs2d;
-   TypeStruct.Cgebr2d   = Czgebr2d;
-   TypeStruct.Cgsum2d   = Czgsum2d;
+   __zTypeStruct.Cgesd2d   = Czgesd2d;
+   __zTypeStruct.Cgerv2d   = Czgerv2d;
+   __zTypeStruct.Cgebs2d   = Czgebs2d;
+   __zTypeStruct.Cgebr2d   = Czgebr2d;
+   __zTypeStruct.Cgsum2d   = Czgsum2d;
 
-   TypeStruct.Fmmadd    = zmmadd_;
-   TypeStruct.Fmmcadd   = zmmcadd_;
-   TypeStruct.Fmmtadd   = zmmtadd_;
-   TypeStruct.Fmmtcadd  = zmmtcadd_;
-   TypeStruct.Fmmdda    = zmmdda_;
-   TypeStruct.Fmmddac   = zmmddac_;
-   TypeStruct.Fmmddat   = zmmddat_;
-   TypeStruct.Fmmddact  = zmmddact_;
+   __zTypeStruct.Fmmadd    = zmmadd_;
+   __zTypeStruct.Fmmcadd   = zmmcadd_;
+   __zTypeStruct.Fmmtadd   = zmmtadd_;
+   __zTypeStruct.Fmmtcadd  = zmmtcadd_;
+   __zTypeStruct.Fmmdda    = zmmdda_;
+   __zTypeStruct.Fmmddac   = zmmddac_;
+   __zTypeStruct.Fmmddat   = zmmddat_;
+   __zTypeStruct.Fmmddact  = zmmddact_;
 
-   TypeStruct.Fcshft    = zcshft_;
-   TypeStruct.Frshft    = zrshft_;
+   __zTypeStruct.Fcshft    = zcshft_;
+   __zTypeStruct.Frshft    = zrshft_;
 
-   TypeStruct.Fvvdotu   = zvvdotu_;
-   TypeStruct.Fvvdotc   = zvvdotc_;
+   __zTypeStruct.Fvvdotu   = zvvdotu_;
+   __zTypeStruct.Fvvdotc   = zvvdotc_;
 
-   TypeStruct.Fset      = zset_;
+   __zTypeStruct.Fset      = zset_;
 
-   TypeStruct.Ftzpad    = ztzpad_;
-   TypeStruct.Ftzpadcpy = ztzpadcpy_;
-   TypeStruct.Ftzscal   = ztzscal_;
-   TypeStruct.Fhescal   = zhescal_;
-   TypeStruct.Ftzcnjg   = ztzcnjg_;
+   __zTypeStruct.Ftzpad    = ztzpad_;
+   __zTypeStruct.Ftzpadcpy = ztzpadcpy_;
+   __zTypeStruct.Ftzscal   = ztzscal_;
+   __zTypeStruct.Fhescal   = zhescal_;
+   __zTypeStruct.Ftzcnjg   = ztzcnjg_;
 
-   TypeStruct.Faxpy     = zaxpy_;
-   TypeStruct.Fcopy     = zcopy_;
-   TypeStruct.Fswap     = zswap_;
+   __zTypeStruct.Faxpy     = zaxpy_;
+   __zTypeStruct.Fcopy     = zcopy_;
+   __zTypeStruct.Fswap     = zswap_;
 
-   TypeStruct.Fgemv     = zgemv_;
-   TypeStruct.Fsymv     = zsymv_;
-   TypeStruct.Fhemv     = zhemv_;
-   TypeStruct.Ftrmv     = ztrmv_;
-   TypeStruct.Ftrsv     = ztrsv_;
-   TypeStruct.Fagemv    = zagemv_;
-   TypeStruct.Fasymv    = zasymv_;
-   TypeStruct.Fahemv    = zahemv_;
-   TypeStruct.Fatrmv    = zatrmv_;
+   __zTypeStruct.Fgemv     = zgemv_;
+   __zTypeStruct.Fsymv     = zsymv_;
+   __zTypeStruct.Fhemv     = zhemv_;
+   __zTypeStruct.Ftrmv     = ztrmv_;
+   __zTypeStruct.Ftrsv     = ztrsv_;
+   __zTypeStruct.Fagemv    = zagemv_;
+   __zTypeStruct.Fasymv    = zasymv_;
+   __zTypeStruct.Fahemv    = zahemv_;
+   __zTypeStruct.Fatrmv    = zatrmv_;
 
-   TypeStruct.Fgerc     = zgerc_;
-   TypeStruct.Fgeru     = zgeru_;
-   TypeStruct.Fsyr      = zsyr_;
-   TypeStruct.Fher      = zher_;
-   TypeStruct.Fsyr2     = zsyr2_;
-   TypeStruct.Fher2     = zher2_;
+   __zTypeStruct.Fgerc     = zgerc_;
+   __zTypeStruct.Fgeru     = zgeru_;
+   __zTypeStruct.Fsyr      = zsyr_;
+   __zTypeStruct.Fher      = zher_;
+   __zTypeStruct.Fsyr2     = zsyr2_;
+   __zTypeStruct.Fher2     = zher2_;
 
-   TypeStruct.Fgemm     = zgemm_;
-   TypeStruct.Fsymm     = zsymm_;
-   TypeStruct.Fhemm     = zhemm_;
-   TypeStruct.Fsyrk     = zsyrk_;
-   TypeStruct.Fherk     = zherk_;
-   TypeStruct.Fsyr2k    = zsyr2k_;
-   TypeStruct.Fher2k    = zher2k_;
-   TypeStruct.Ftrmm     = ztrmm_;
-   TypeStruct.Ftrsm     = ztrsm_;
+   __zTypeStruct.Fgemm     = zgemm_;
+   __zTypeStruct.Fsymm     = zsymm_;
+   __zTypeStruct.Fhemm     = zhemm_;
+   __zTypeStruct.Fsyrk     = zsyrk_;
+   __zTypeStruct.Fherk     = zherk_;
+   __zTypeStruct.Fsyr2k    = zsyr2k_;
+   __zTypeStruct.Fher2k    = zher2k_;
+   __zTypeStruct.Ftrmm     = ztrmm_;
+   __zTypeStruct.Ftrsm     = ztrsm_;
 
-   return( &TypeStruct );
+   return( &__zTypeStruct );
 /*
 *  End of PB_Cztypeset
 */

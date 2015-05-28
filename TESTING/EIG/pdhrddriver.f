@@ -1,4 +1,14 @@
       PROGRAM PDHRDDRIVER
+
+!$omp parallel
+      CALL PDHRD()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDHRD
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -87,7 +97,8 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), NVHI( NTESTS ), NVLO( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-      DOUBLE PRECISION   CTIME( 1 ), MEM( MEMSIZ ), WTIME( 1 )
+      DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -107,8 +118,10 @@
 *     ..
 *     .. Data statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

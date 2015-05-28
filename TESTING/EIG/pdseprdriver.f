@@ -1,4 +1,14 @@
       PROGRAM PDSEPRDRIVER
+
+!$omp parallel
+      CALL PDSEPR()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDSEPR
 *
 *     Parallel DOUBLE PRECISION symmetric eigenproblem test driver for PDSYEVR
 *
@@ -19,14 +29,14 @@
 *     TESTS PERFORMED
 *     ===============
 *
-*     This routine performs tests for combinations of:  matrix size, process 
-*     configuration (nprow and npcol), block size (nb), 
-*     matrix type, range of eigenvalue (all, by value, by index), 
+*     This routine performs tests for combinations of:  matrix size, process
+*     configuration (nprow and npcol), block size (nb),
+*     matrix type, range of eigenvalue (all, by value, by index),
 *     and upper vs. lower storage.
 *
 *     It returns an error message when heterogeneity is detected.
 *
-*     The input file allows multiple requests where each one is 
+*     The input file allows multiple requests where each one is
 *     of the following sets:
 *       matrix sizes:                     n
 *       process configuration triples:  nprow, npcol, nb
@@ -56,7 +66,7 @@
 *     .. Local Arrays ..
 *
       INTEGER            ISEED( 4 )
-      DOUBLE PRECISION   MEM( MEMSIZ )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Functions ..
       DOUBLE PRECISION   DLAMCH
@@ -64,11 +74,12 @@
 *     ..
 *     .. External Subroutines ..
 *
-      EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT, 
-     $                   BLACS_GRIDINIT, BLACS_PINFO, BLACS_SETUP, 
-     $                   IGAMN2D, PDLACHKIEEE, PDLASNBT, PDSEPRREQ 
+      EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT,
+     $                   BLACS_GRIDINIT, BLACS_PINFO, BLACS_SETUP,
+     $                   IGAMN2D, PDLACHKIEEE, PDLASNBT, PDSEPRREQ
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *
@@ -176,7 +187,7 @@
          WRITE( NOUT, FMT = 9999 )
      $      '           otherwise the true QTQ norm is printed.'
          WRITE( NOUT, FMT = 9999 )
-     $      '         : If more than one test is done, CHK and QTQ ' 
+     $      '         : If more than one test is done, CHK and QTQ '
          WRITE( NOUT, FMT = 9999 )
      $      '           are the max over all eigentests performed.'
          WRITE( NOUT, FMT = 9999 )

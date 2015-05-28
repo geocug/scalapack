@@ -1,4 +1,14 @@
       PROGRAM PZEVCDRIVER
+
+!$omp parallel
+      CALL PZEV()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PZEV
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -96,7 +106,7 @@
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 2 ), RESULT( 2 ), RWORK( 5000 ),
      $                   WTIME( 2 )
-      COMPLEX*16         MEM( MEMSIZ )
+      COMPLEX*16, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -116,8 +126,10 @@
 *     ..
 *     .. Data statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

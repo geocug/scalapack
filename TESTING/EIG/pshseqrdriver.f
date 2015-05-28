@@ -6,6 +6,16 @@
 *     This version is of Feb 2011.
 *
       PROGRAM PSHSEQRDRIVER
+
+!$omp parallel
+      CALL PSHSEQ()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSHSEQ
 *
 *     Declarations
 *
@@ -56,7 +66,7 @@
       INTEGER           TOTIT, SWEEPS, TOTNS, HESS
       REAL              EPS, THRESH
       DOUBLE PRECISION  STAMP, TOTTIME, T_BA, T_GEN, T_HS, T_SCH, T_QR,
-     $                  T_RES, ITPEREIG, SWPSPEIG, NSPEIG, SPEEDUP, 
+     $                  T_RES, ITPEREIG, SWPSPEIG, NSPEIG, SPEEDUP,
      $                  EFFICIENCY
       REAL              RNORM, ANORM, R1, ORTH, O1, O2, DPDUM, ELEM1,
      $                  ELEM2, ELEM3, EDIFF
@@ -75,12 +85,12 @@
 *     ...External Functions...
       INTEGER           NUMROC
       REAL              PSLAMCH, PSLANGE
-      DOUBLE PRECISION  MPI_WTIME
+      DOUBLE PRECISION  DWALLTIME00
       EXTERNAL          BLACS_PINFO, BLACS_GET, BLACS_GRIDINIT,
      $                  BLACS_GRIDINFO, BLACS_GRIDEXIT, BLACS_EXIT
       EXTERNAL          NUMROC, PSLAMCH, PSLASET, PSGEHRD, PSLANGE
       EXTERNAL          SGEBAL, SGEHRD
-      EXTERNAL          MPI_WTIME
+      EXTERNAL          DWALLTIME00
       EXTERNAL          PSGEBAL
       EXTERNAL          PSMATGEN2
 *
@@ -99,8 +109,8 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
 *     Read out the number of underlying threads and set stack size in
 *     kilobytes.
 *
-	THRESH = 30.0
-      TOTTIME = MPI_WTIME()
+	  THRESH = 30.0
+      TOTTIME = DWALLTIME00()
       T_GEN = 0.0D+00
       T_RES = 0.0D+00
       T_SCH = 0.0D+00
@@ -123,14 +133,14 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
 *
 *     Get machine epsilon.
 *
-      EPS = PSLAMCH( ICTXT, 'Epsilon' )      
+      EPS = PSLAMCH( ICTXT, 'Epsilon' )
 *
 *     Print welcoming message.
 *
       IF( IAM.EQ.0 ) THEN
          WRITE(*,*)
          WRITE(*,*) 'ScaLAPACK Test for PSHSEQR'
-         WRITE(*,*) 
+         WRITE(*,*)
          WRITE(*,*) 'epsilon   = ', EPS
          WRITE(*,*) 'threshold = ', THRESH
          WRITE(*,*)
@@ -142,12 +152,12 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
          WRITE(*,*) 'Orthogonality = ',
      $   ' MAX( || I - Q^T*Q ||_F, || I - Q*Q^T ||_F ) / ',
      $   ' (eps * N)'
-     	   WRITE(*,*) 
-     	   WRITE(*,*) 
-     $  'Test passes if both residuals are less then threshold'        
-	   WRITE( NOUT, * )
-	   WRITE( NOUT, FMT = 9995 )
-	   WRITE( NOUT, FMT = 9994 )
+           WRITE(*,*)
+           WRITE(*,*)
+     $  'Test passes if both residuals are less then threshold'
+           WRITE( NOUT, * )
+           WRITE( NOUT, FMT = 9995 )
+           WRITE( NOUT, FMT = 9994 )
       END IF
 *
 *     Loop over problem parameters.
@@ -165,7 +175,7 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
 *        Count the number of rows and columns of current problem
 *        for the current block sizes and grid properties.
 *
-         STAMP = MPI_WTIME()
+         STAMP = DWALLTIME00()
          AROWS = NUMROC( N, NB, MYROW, 0, NPROW )
          ACOLS = NUMROC( N, NB, MYCOL, 0, NPCOL )
 *
@@ -239,7 +249,7 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
 *        Do balancing if general matrix.
 *
          IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')
-         T_BA = MPI_WTIME()
+         T_BA = DWALLTIME00()
          IF( COMPHESS .AND. BALANCE ) THEN
             IF( NPROCS.EQ.1 .AND. SOLVER.NE.2 .AND. UNI_LAPACK ) THEN
                IF( DEBUG ) WRITE(*,*) '% #', IAM, ': == dgebal =='
@@ -265,7 +275,7 @@ c      IF ( ( MYROW.GE.NPROW ) .OR. ( MYCOL.GE.NPCOL ) ) GO TO 777
             ILO = KTOP
             IHI = KBOT
          END IF
-         T_BA = MPI_WTIME() - T_BA
+         T_BA = DWALLTIME00() - T_BA
 c         IF( TIMESTEPS.AND.IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% Balancing took in seconds:',T_BA
          IF( DEBUG ) WRITE(*,*) '% #', IAM, ': ILO,IHI=',ILO,IHI
@@ -282,13 +292,13 @@ c     $      ' %%% Balancing took in seconds:',T_BA
          IF( PRN )
      $      CALL PSLAPRNT( N, N, MEM(IPACPY), 1, 1, DESCA, 0, 0,
      $           'A', NOUT, MEM(IPW1) )
-         T_GEN = T_GEN + MPI_WTIME() - STAMP - T_BA
+         T_GEN = T_GEN + DWALLTIME00() - STAMP - T_BA
 c         IF( TIMESTEPS.AND.IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% Generation took in seconds:',T_GEN
 *
 *        Only compute the Hessenberg form if necessary.
 *
-         T_HS = MPI_WTIME()
+         T_HS = DWALLTIME00()
          IF( .NOT. COMPHESS ) GO TO 30
 *
 *        Reduce A to Hessenberg form.
@@ -363,14 +373,14 @@ c     $      ' %%% Generation took in seconds:',T_GEN
          END IF
 *
  30      CONTINUE
-         T_HS = MPI_WTIME() - T_HS
+         T_HS = DWALLTIME00() - T_HS
 c         IF( TIMESTEPS.AND.IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% Hessenberg took in seconds:',T_HS
 *
 *        Compute the real Schur form of the Hessenberg matrix A.
 *
          IF( BARR ) CALL BLACS_BARRIER(ICTXT, 'A')
-         T_QR = MPI_WTIME()
+         T_QR = DWALLTIME00()
          IF( SOLVER.EQ.1 ) THEN
             IF( DEBUG ) WRITE(*,*) '% #', IAM, ': == pdlaqr1 =='
 *            PRINT*, '% PSLAQR1: IPW1,MEM(IPW1)', IPW1, MEM(IPW1)
@@ -418,7 +428,7 @@ c     $      ' %%% Hessenberg took in seconds:',T_HS
              WRITE(*,*) '% ERROR: Illegal SOLVER number!'
              GO TO 999
          END IF
-         T_QR = MPI_WTIME() - T_QR
+         T_QR = DWALLTIME00() - T_QR
 c         IF( TIMESTEPS.AND.IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% QR-algorithm took in seconds:',T_QR
          T_SCH = T_SCH + T_QR + T_HS + T_BA
@@ -467,7 +477,7 @@ c     $      ' %%% QR-algorithm took in seconds:',T_QR
 *           2) ORTH  = MAX( || I - Q'*Q ||_F, || I - Q*Q' ||_F ) /
 *                  (epsilon*N)
 *
-         STAMP = MPI_WTIME()
+         STAMP = DWALLTIME00()
          IF( COMPRESI ) THEN
             IF( DEBUG ) WRITE(*,*) '% #', IAM, ': Compute residuals 1'
             IF( DEBUG ) WRITE(*,*) '% #', IAM, ': pdgemm 3'
@@ -515,10 +525,10 @@ c     $      ' %%% QR-algorithm took in seconds:',T_QR
             ORTH = 0.0D0
          END IF
 *
-         T_RES = T_RES + MPI_WTIME() - STAMP
+         T_RES = T_RES + DWALLTIME00() - STAMP
 c         IF( TIMESTEPS.AND.IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% Residuals took in seconds:',T_RES
-         TOTTIME = MPI_WTIME() - TOTTIME
+         TOTTIME = DWALLTIME00() - TOTTIME
 c         IF( IAM.EQ.0 ) WRITE(*,*)
 c     $      ' %%% Total execution time in seconds:', TOTTIME
 *
@@ -560,6 +570,6 @@ c     $      ' %%% Total execution time in seconds:', TOTTIME
  9995 FORMAT( '    N  NB    P    Q  QR Time  CHECK' )
  9994 FORMAT( '----- --- ---- ---- -------- ------' )
  9993 FORMAT( I5, 1X, I3, 1X, I4, 1X, I4, 1X, F8.2, 1X, A6 )
-          
+
 *
       END

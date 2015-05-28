@@ -1,4 +1,14 @@
       PROGRAM PDLSDRIVER
+
+!$omp parallel
+      CALL PDLS()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDLS
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -96,8 +106,9 @@
      $                   NBRVAL( NTESTS ), NBVAL( NTESTS ),
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-      DOUBLE PRECISION   CTIME( 1 ), MEM( MEMSIZ ), RESULT( 2 ),
+      DOUBLE PRECISION   CTIME( 1 ), RESULT( 2 ),
      $                   WTIME( 1 )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -119,8 +130,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

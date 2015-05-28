@@ -1,4 +1,14 @@
       PROGRAM PSINVDRIVER
+
+!$omp parallel
+      CALL PSINV()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSINV
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -90,7 +100,7 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ),
      $                   QVAL( NTESTS )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
 *     ..
 *     .. External Subroutines ..
@@ -114,8 +124,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP /4*0/
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

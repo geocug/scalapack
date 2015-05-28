@@ -1,4 +1,14 @@
       PROGRAM PDSVDDRIVER
+
+!$omp parallel
+      CALL PDSVD()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDSVD
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -14,7 +24,7 @@
 *  =====
 *  This routine tests PDGESVD, the parallel singular value
 *  decomposition  solver. We would like to cover possible combinations
-*  of: matrix size, process configuration (nprow and npcol), block 
+*  of: matrix size, process configuration (nprow and npcol), block
 *  size (nb), matrix type, and workspace available.
 *
 *  Current format of the input file SVD.dat lists the following:
@@ -34,7 +44,7 @@
 *  ============
 *  PSVDDRIVER checks floating-point arithmetic and parameters
 *  provided by the user in initialization file SVD.dat. It reads and
-*  broadcasts to all process parameters required to run actual testing 
+*  broadcasts to all process parameters required to run actual testing
 *  code PSVDTST. In case all tests are successful it tells you so. For
 *  the actual "meat" of the tests see comments to PSVDTST.
 *
@@ -56,7 +66,7 @@
      $                   NBS( MAXSETSIZE ), NN( MAXSETSIZE ),
      $                   NPCOLS( MAXSETSIZE ), NPROWS( MAXSETSIZE ),
      $                   RESULT( 9 )
-      DOUBLE PRECISION   WORK( MEMSIZ )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: WORK
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_EXIT, BLACS_GET, BLACS_GRIDEXIT,
@@ -64,6 +74,7 @@
      $                   DGEBR2D, DGEBS2D, IGEBR2D, IGEBS2D, PDSVDTST
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(WORK( MEMSIZ ))
 *
 *     Get starting information.
 *
@@ -128,7 +139,7 @@
          WRITE( NOUT, FMT = 9965 )
       END IF
 *
-*     Process 0 reads values in input file and broadcasts them to 
+*     Process 0 reads values in input file and broadcasts them to
 *     all other processes.
 *
    10 CONTINUE

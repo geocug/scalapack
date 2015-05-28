@@ -1,9 +1,19 @@
       PROGRAM PCLSDRIVER
+
+!$omp parallel
+      CALL PCLS()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PCLS
 *
 *  -- ScaLAPACK routine (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
 *     and University of California, Berkeley.
-*     August 14, 2001 
+*     August 14, 2001
 *
 *  Purpose
 *  =======
@@ -99,7 +109,7 @@
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       REAL               RESULT( 2 )
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
-      COMPLEX            MEM( MEMSIZ )
+      COMPLEX, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -122,8 +132,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

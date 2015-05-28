@@ -160,6 +160,7 @@
 *     .. Common Blocks ..
       COMMON /RANCOM/    IRAND, IAS, ICS
       SAVE   /RANCOM/
+!$omp threadprivate(/RANCOM/)
 *     ..
 *     .. Executable Statements ..
 *
@@ -201,6 +202,7 @@
 *     .. Common Blocks ..
       COMMON /RANCOM/    IRAND, IAS, ICS
       SAVE   /RANCOM/
+!$omp threadprivate(/RANCOM/)
 *     ..
 *     .. Executable Statements ..
 *
@@ -250,6 +252,7 @@
       INTEGER            IAS(2), ICS(2), IRAND(2)
       COMMON /RANCOM/    IRAND, IAS, ICS
       SAVE   /RANCOM/
+!$omp threadprivate(/RANCOM/)
 *     ..
 *     .. Executable Statements ..
 *
@@ -298,6 +301,7 @@
       INTEGER            IAS(2), ICS(2), IRAND(2)
       COMMON /RANCOM/    IRAND, IAS, ICS
       SAVE   /RANCOM/
+!$omp threadprivate(/RANCOM/)
 *     ..
 *     .. Executable Statements ..
 *

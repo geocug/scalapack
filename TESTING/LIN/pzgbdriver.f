@@ -1,4 +1,14 @@
       PROGRAM PZGBDRIVER
+
+!$omp parallel
+      CALL PZGB()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PZGB
 *
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -123,7 +133,7 @@
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
       DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
-      COMPLEX*16         MEM( MEMSIZ )
+      COMPLEX*16, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -144,11 +154,13 @@
 *     ..
 *     .. Data Statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *
 *
 *
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

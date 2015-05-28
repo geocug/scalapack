@@ -1,4 +1,14 @@
       PROGRAM PDPTDRIVER
+
+!$omp parallel
+      CALL PDPT()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PDPT
 *
 *
 *  -- ScaLAPACK routine (version 1.7) --
@@ -111,7 +121,8 @@
      $                   NBRVAL( NTESTS ), NBVAL( NTESTS ),
      $                   NRVAL( NTESTS ), NVAL( NTESTS ),
      $                   PVAL( NTESTS ), QVAL( NTESTS )
-      DOUBLE PRECISION   CTIME( 2 ), MEM( MEMSIZ ), WTIME( 2 )
+      DOUBLE PRECISION   CTIME( 2 ), WTIME( 2 )
+      DOUBLE PRECISION, ALLOCATABLE, DIMENSION(:) :: MEM
 *     ..
 *     .. External Subroutines ..
       EXTERNAL           BLACS_BARRIER, BLACS_EXIT, BLACS_GET,
@@ -132,11 +143,13 @@
 *     ..
 *     .. Data Statements ..
       DATA               KFAIL, KPASS, KSKIP, KTESTS / 4*0 /
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *
 *
 *
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *

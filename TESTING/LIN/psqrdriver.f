@@ -1,4 +1,14 @@
       PROGRAM PSQRDRIVER
+
+!$omp parallel
+      CALL PSQR()
+!$omp end parallel
+
+      STOP
+      END
+
+
+      SUBROUTINE PSQR
 *
 *  -- ScaLAPACK testing driver (version 1.7) --
 *     University of Tennessee, Knoxville, Oak Ridge National Laboratory,
@@ -96,7 +106,7 @@
       INTEGER            DESCA( DLEN_ ), IERR( 1 ), MBVAL( NTESTS ),
      $                   MVAL( NTESTS ), NBVAL( NTESTS ),
      $                   NVAL( NTESTS ), PVAL( NTESTS ), QVAL( NTESTS )
-      REAL               MEM( MEMSIZ )
+      REAL, ALLOCATABLE, DIMENSION(:) :: MEM
       DOUBLE PRECISION   CTIME( 1 ), WTIME( 1 )
 *     ..
 *     .. External Subroutines ..
@@ -121,8 +131,10 @@
 *     ..
 *     .. Data Statements ..
       DATA               KTESTS, KPASS, KFAIL, KSKIP /4*0/
+!$omp threadprivate(KTESTS, KPASS, KFAIL, KSKIP)
 *     ..
 *     .. Executable Statements ..
+      ALLOCATE(MEM( MEMSIZ ))
 *
 *     Get starting information
 *
