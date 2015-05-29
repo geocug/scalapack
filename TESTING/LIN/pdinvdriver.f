@@ -92,6 +92,7 @@
      $                   LIWORK, LWORK, MYCOL, MYROW, N, NB, NGRIDS,
      $                   NMAT, NMTYP, NNB, NOUT, NP, NPCOL, NPROCS,
      $                   NPROW, NQ, WORKIINV, WORKINV, WORKSIZ
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       REAL               THRESH
       DOUBLE PRECISION   ANORM, FRESID, NOPS, RCOND, TMFLOPS
 *     ..

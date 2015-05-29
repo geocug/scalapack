@@ -102,6 +102,7 @@
      $                   NMAT, NNB, NOUT, NPCOL, NPROCS, NPROW, NQ,
      $                   WORKFCT, WORKRFCT, WORKSIZ
       REAL               THRESH
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       DOUBLE PRECISION   ANORM, FRESID, NOPS, TMFLOPS
 *     ..
 *     .. Arrays ..

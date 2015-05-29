@@ -98,6 +98,7 @@
      $                   MYROW, N, NB, NBRHS, NCOLS, NGRIDS, NMAT, NNB,
      $                   NNBR, NNR, NNRHSQ, NOUT, NP, NPCOL, NPROCS,
      $                   NPROW, NROWS, NQ, NRHS, NRHSP, NRHSQ, WORKSIZ
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       REAL               ANORM, BNORM, SRESID, THRESH
       DOUBLE PRECISION   ADDFAC, ADDS, MULFAC, MULTS, NOPS, TMFLOPS
 *     ..

@@ -113,6 +113,7 @@
      $                   NBW, NGRIDS, NMAT, NNB, NNBR, NNR, NOUT, NP,
      $                   NPCOL, NPROCS, NPROCS_REAL, NPROW, NQ, NRHS,
      $                   N_FIRST, N_LAST, WORKSIZ
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       REAL               ANORM, SRESID, THRESH
       DOUBLE PRECISION   NOPS, NOPS2, TMFLOPS, TMFLOPS2
 *     ..

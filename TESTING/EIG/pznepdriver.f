@@ -94,6 +94,7 @@
      $                   KPASS, KSKIP, KTESTS, LDA, LDWORK, LDZ, LWORK,
      $                   MYCOL, MYROW, N, NB, NGRIDS, NMAT, NNB, NOUT,
      $                   NP, NPCOL, NPROCS, NPROW, NQ, WORKSIZ
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       REAL               THRESH
       DOUBLE PRECISION   ANORM, FRESID, NOPS, QRESID, TMFLOPS, ZNORM
 *     ..

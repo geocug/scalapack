@@ -103,6 +103,7 @@
      $                   MINMN, MP, MYCOL, MYRHS, MYROW, N, NB, NBRHS,
      $                   NGRIDS, NMAT, NNB, NNBR, NNR, NOUT, NP, NPCOL,
      $                   NPROCS, NPROW, NQ, NRHS, WORKSIZ
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       REAL               THRESH
       DOUBLE PRECISION   ANORM, ANORM1, FRESID, NOPS, RCOND,
      $                   SRESID, SRESID2, TMFLOPS

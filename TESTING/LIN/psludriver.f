@@ -101,6 +101,7 @@
      $                   NPROCS, NPROW, NQ, NRHS, WORKSIZ
       REAL               ANORM, ANORM1, FRESID, RCOND, SRESID, SRESID2,
      $                   THRESH
+      SAVE               KTESTS, KPASS, KFAIL, KSKIP
       DOUBLE PRECISION   NOPS, TMFLOPS
 *     ..
 *     .. Local Arrays ..
